@@ -13,13 +13,13 @@ import java.io.FileInputStream;
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
  */
-@SpringBootTest({"src/test/resources/happy_path_input.xlsx", "src/test/resources/output.xlsx"})
+@SpringBootTest({"src/test/resources/happy_path_input.xlsx", "src/test/resources/test_output.xlsx"})
 public class AcceptanceTest {
 
     @Test
     public void plateColumnHasCorrectValue() throws Exception {
         try {
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("src/test/resources/output.xlsx"));
+            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("src/test/resources/test_output.xlsx"));
             HSSFWorkbook wb = new HSSFWorkbook(fs);
             HSSFSheet sheet = wb.getSheetAt(0);
             HSSFRow row;
