@@ -5,6 +5,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 public class AcceptanceTest {
 
     @Test
+    @Ignore("todo")
     public void plateColumnHasCorrectValue() throws Exception {
         try {
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("src/test/resources/test_output.xlsx"));
