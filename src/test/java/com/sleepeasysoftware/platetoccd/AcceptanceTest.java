@@ -1,60 +1,30 @@
 package com.sleepeasysoftware.platetoccd;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.FileInputStream;
+import java.util.List;
+import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
  */
-@SpringBootTest({"src/test/resources/happy_path_input.xlsx", "src/test/resources/test_output.xlsx"})
+@RunWith(SpringRunner.class)
+@SpringBootTest({"input=src/test/resources/happy_path_input.xlsx", "output=src/test/resources/test_output.xlsx"})
 public class AcceptanceTest {
 
     @Test
-    @Ignore("todo")
-    public void plateColumnHasCorrectValue() throws Exception {
-        try {
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("src/test/resources/test_output.xlsx"));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
-            HSSFSheet sheet = wb.getSheetAt(0);
-            HSSFRow row;
-            HSSFCell cell;
+    public void headerOutput() throws Exception {
+        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet("src/test/resources/test_output.xlsx");
 
-            int rows; // No of rows
-            rows = sheet.getPhysicalNumberOfRows();
-
-            int cols = 0; // No of columns
-            int tmp = 0;
-
-            // This trick ensures that we get the data properly even if it doesn't start from first few rows
-            for(int i = 0; i < 10 || i < rows; i++) {
-                row = sheet.getRow(i);
-                if(row != null) {
-                    tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-                    if(tmp > cols) cols = tmp;
-                }
-            }
-
-            for(int r = 0; r < rows; r++) {
-                row = sheet.getRow(r);
-                if(row != null) {
-                    for(int c = 0; c < cols; c++) {
-                        cell = row.getCell((short)c);
-                        if(cell != null) {
-                            // Your code here
-                        }
-                    }
-                }
-            }
-        } catch(Exception ioe) {
-            ioe.printStackTrace();
-        }
+        List<Optional<String>> header = sheet.get(0);
+        assertThat(header.get(0), equalTo("Plate"));
+        assertThat(header.get(1), equalTo("Well"));
+        assertThat(header.get(2), equalTo("Data"));
     }
 }
