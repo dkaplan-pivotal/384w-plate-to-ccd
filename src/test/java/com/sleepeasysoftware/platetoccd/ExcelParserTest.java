@@ -1,13 +1,9 @@
 package com.sleepeasysoftware.platetoccd;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -17,11 +13,8 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class ExcelParserTest {
 
-    @Autowired
     private ExcelParser subject;
     private int countPlate1;
     private int countPlate2;
@@ -31,6 +24,11 @@ public class ExcelParserTest {
     private int count24;
     private int countP;
     private int countNulls;
+
+    @Before
+    public void setUp() throws Exception {
+        subject = new ExcelParser();
+    }
 
     @Test
     public void canReadInputFile() throws Exception {
