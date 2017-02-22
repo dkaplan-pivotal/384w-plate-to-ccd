@@ -23,13 +23,15 @@ public class ApplicationUsage implements ApplicationRunner {
     private final PlateWriter plateWriter;
     private final ExcelParser excelParser;
     private final WellWriter wellWriter;
+    private final DataWriter dataWriter;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter) {
+    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter, DataWriter dataWriter) {
         this.headerWriter = headerWriter;
         this.plateWriter = plateWriter;
         this.excelParser = excelParser;
         this.wellWriter = wellWriter;
+        this.dataWriter = dataWriter;
     }
 
     @Override
@@ -61,6 +63,7 @@ public class ApplicationUsage implements ApplicationRunner {
 
         plateWriter.execute(inputData, sheet);
         wellWriter.execute(inputData, sheet);
+        dataWriter.execute(inputData, sheet);
 
         try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
             wb.write(fileOut);

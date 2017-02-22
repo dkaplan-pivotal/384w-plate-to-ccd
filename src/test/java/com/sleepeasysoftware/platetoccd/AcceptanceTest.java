@@ -24,6 +24,7 @@ public class AcceptanceTest {
     private static final String OUTPUT_FILE = "src/test/resources/test_output.xlsx";
     private static final int PLATE_COLUMN = 0;
     private static final int WELL_INDEX = 1;
+    private static final int DATA_INDEX = 2;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -88,5 +89,22 @@ public class AcceptanceTest {
                 fail("Out of bounds on row " + outputRow);
             }
         }
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Test
+    public void dataOutput() throws Exception {
+        List<List<Optional<String>>> outputSheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+
+        assertThat(outputSheet.get(1).get(DATA_INDEX).get(), equalTo("4 2"));
+        assertThat(outputSheet.get(2).get(DATA_INDEX).get(), equalTo("5 2"));
+        assertThat(outputSheet.get(17).get(DATA_INDEX).get(), equalTo("4 3"));
+        assertThat(outputSheet.get(18).get(DATA_INDEX).get(), equalTo("5 3"));
+        assertThat(outputSheet.get(384).get(DATA_INDEX).get(), equalTo("19 25"));
+        assertThat(outputSheet.get(385).get(DATA_INDEX).get(), equalTo("23 2"));
+        assertThat(outputSheet.get(386).get(DATA_INDEX).get(), equalTo("24 2"));
+        assertThat(outputSheet.get(768).get(DATA_INDEX).get(), equalTo("38 25"));
+        assertThat(outputSheet.get(769).get(DATA_INDEX).get(), equalTo("42 2"));
+        assertThat(outputSheet.get(1152).get(DATA_INDEX).get(), equalTo("57 25"));
     }
 }
