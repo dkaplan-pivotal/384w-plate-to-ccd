@@ -47,7 +47,7 @@ public class ApplicationUsageTest {
     public void requireExistingInputFile() throws Exception {
         thrown.expect(IllegalStateException.class);
 
-        subject.run(DOES_NOT_EXIST_FILE, EXISTING_OUTPUT_FILE);
+        subject.run(DOES_NOT_EXIST_FILE, DOES_NOT_EXIST_FILE);
     }
 
     @Test
