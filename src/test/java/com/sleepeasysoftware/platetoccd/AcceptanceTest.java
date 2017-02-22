@@ -64,5 +64,8 @@ public class AcceptanceTest {
         for (int row = 770; row < 1153; row++) {
             assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate3"));
         }
+
+        assertThat(sheet, hasSize(1153));
     }
+
 }
