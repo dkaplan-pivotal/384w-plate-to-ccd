@@ -35,7 +35,7 @@ public class ExcelParserTest {
     @Test
     public void canReadInputFile() throws Exception {
 
-        List<List<Optional<Object>>> data = subject.parseFirstSheet("src/test/resources/happy_path_input.xlsx");
+        List<List<Optional<String>>> data = subject.parseFirstSheet("src/test/resources/happy_path_input.xlsx");
 
         data.forEach(row -> row.forEach(cell -> {
             if (!cell.isPresent()) {
@@ -60,7 +60,7 @@ public class ExcelParserTest {
                 if ("P".equals(cellData.toString())) {
                     countP++;
                 }
-                if (Objects.equals(cellData, 24.0)) {
+                if ("24".equals(cellData.toString())) {
                     count24++;
                 }
             }

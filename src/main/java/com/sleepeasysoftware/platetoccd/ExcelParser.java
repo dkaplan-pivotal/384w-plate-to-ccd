@@ -2,6 +2,7 @@ package com.sleepeasysoftware.platetoccd;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -20,12 +21,13 @@ import java.util.Optional;
 @Component
 public class ExcelParser {
 
-    public List<List<Optional<Object>>> parseFirstSheet(String filePath) throws IOException, InvalidFormatException {
+    public List<List<Optional<String>>> parseFirstSheet(String filePath) throws IOException, InvalidFormatException {
         File inputFile = new File(filePath);
         XSSFWorkbook wb = new XSSFWorkbook(inputFile);
         XSSFSheet sheet = wb.getSheetAt(0);
         XSSFRow row;
         XSSFCell cell;
+        DataFormatter formatter = new DataFormatter();
 
         int rows; // No of rows
         rows = sheet.getPhysicalNumberOfRows();
@@ -44,23 +46,21 @@ public class ExcelParser {
             }
         }
 
-        List<List<Optional<Object>>> data = new ArrayList<>();
+        List<List<Optional<String>>> data = new ArrayList<>();
 
         for (int r = 0; r < rows; r++) {
             row = sheet.getRow(r);
             if (row != null) {
-                List<Optional<Object>> rowData = new ArrayList<>();
+                List<Optional<String>> rowData = new ArrayList<>();
                 for (int c = 0; c < cols; c++) {
                     cell = row.getCell(c);
                     if (cell != null) {
                         if (cell.getCellTypeEnum() == CellType.BLANK) {
                             rowData.add(Optional.empty());
-                        } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-                            rowData.add(Optional.of(cell.getNumericCellValue()));
                         } else if (cell.getCellTypeEnum() == CellType.FORMULA) {
                             rowData.add(Optional.of(cell.getRichStringCellValue().getString()));
                         } else {
-                            rowData.add(Optional.of(cell.toString()));
+                            rowData.add(Optional.of(formatter.formatCellValue(cell)));
                         }
                     }
                 }
