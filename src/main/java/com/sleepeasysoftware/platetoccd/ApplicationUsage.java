@@ -22,12 +22,14 @@ public class ApplicationUsage implements ApplicationRunner {
     private final HeaderWriter headerWriter;
     private final PlateWriter plateWriter;
     private final ExcelParser excelParser;
+    private final WellWriter wellWriter;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser) {
+    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter) {
         this.headerWriter = headerWriter;
         this.plateWriter = plateWriter;
         this.excelParser = excelParser;
+        this.wellWriter = wellWriter;
     }
 
     @Override
@@ -58,6 +60,7 @@ public class ApplicationUsage implements ApplicationRunner {
         List<List<Optional<String>>> inputData = excelParser.parseFirstSheet(inputPath);
 
         plateWriter.execute(inputData, sheet);
+        wellWriter.execute(inputData, sheet);
 
         try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
             wb.write(fileOut);

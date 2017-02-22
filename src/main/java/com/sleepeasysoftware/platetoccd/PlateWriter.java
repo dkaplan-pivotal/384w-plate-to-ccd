@@ -26,7 +26,7 @@ public class PlateWriter {
                 String plateName = currentRow.get(0).orElse("(Plate Name Missing)");
                 for (int plateIndex = 0; plateIndex < 384; plateIndex++) {
                     Row row = outputSheet.createRow(outputRow);
-                    row.createCell(0).setCellValue(plateName);
+                    row.createCell(PLATE_NAME_INDEX).setCellValue(plateName);
                     outputRow++;
                 }
             }
