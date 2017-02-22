@@ -49,6 +49,7 @@
     </dependencies>
 
     <build>
+        <finalName>384w-plate-to-ccd</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
