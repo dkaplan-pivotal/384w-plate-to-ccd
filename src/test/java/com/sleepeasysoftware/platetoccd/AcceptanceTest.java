@@ -21,6 +21,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class AcceptanceTest {
 
     private static final String OUTPUT_FILE = "src/test/resources/test_output.xlsx";
+    private static final int PLATE_COLUMN = 0;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -44,5 +45,24 @@ public class AcceptanceTest {
         assertThat(header.get(1).get(), equalTo("Well"));
         assertThat(header.get(2).get(), equalTo("Data"));
         assertThat(header, hasSize(3));
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Test
+    public void plateOutput() throws Exception {
+
+        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+
+        for (int row = 1; row < 385; row++) {
+            assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate1"));
+        }
+
+        for (int row = 386; row < 769; row++) {
+            assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate2"));
+        }
+
+        for (int row = 770; row < 1153; row++) {
+            assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate3"));
+        }
     }
 }

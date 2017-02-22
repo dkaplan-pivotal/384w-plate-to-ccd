@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
@@ -19,10 +20,14 @@ import java.util.List;
 public class ApplicationUsage implements ApplicationRunner {
 
     private final HeaderWriter headerWriter;
+    private final PlateWriter plateWriter;
+    private final ExcelParser excelParser;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter) {
+    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser) {
         this.headerWriter = headerWriter;
+        this.plateWriter = plateWriter;
+        this.excelParser = excelParser;
     }
 
     @Override
@@ -35,12 +40,14 @@ public class ApplicationUsage implements ApplicationRunner {
                     "java -jar 384w-plate-to-ccd.jar '/Users/pivotal/workspace/384w-plate-to-ccd/src/test/resources/happy_path_input.xlsx' '/Users/pivotal/workspace/384w-plate-to-ccd/src/test/resources/happy_path_output.xlsx'");
         }
 
-        if (!new File(arguments.get(0)).exists()) {
-            throw new IllegalArgumentException("Could not find the input file.  Looked for " + arguments.get(0));
+        String inputPath = arguments.get(0);
+        if (!new File(inputPath).exists()) {
+            throw new IllegalArgumentException("Could not find the input file.  Looked for " + inputPath);
         }
 
-        if (new File(arguments.get(1)).exists()) {
-            throw new IllegalArgumentException("Output file already exists.  The output file must not already exist.  Found " + arguments.get(1));
+        String outputPath = arguments.get(1);
+        if (new File(outputPath).exists()) {
+            throw new IllegalArgumentException("Output file already exists.  The output file must not already exist.  Found " + outputPath);
         }
 
         Workbook wb = new XSSFWorkbook();
@@ -48,7 +55,11 @@ public class ApplicationUsage implements ApplicationRunner {
 
         headerWriter.execute(sheet);
 
-        try (FileOutputStream fileOut = new FileOutputStream(arguments.get(1))) {
+        List<List<Optional<String>>> inputData = excelParser.parseFirstSheet(inputPath);
+
+        plateWriter.execute(inputData, sheet);
+
+        try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
             wb.write(fileOut);
         }
     }
