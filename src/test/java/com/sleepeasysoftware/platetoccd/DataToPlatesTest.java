@@ -1,6 +1,7 @@
 package com.sleepeasysoftware.platetoccd;
 
 import com.sleepeasysoftware.platetoccd.model.Plate;
+import com.sleepeasysoftware.platetoccd.parser.ExcelParser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

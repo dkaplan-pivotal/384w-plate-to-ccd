@@ -1,4 +1,4 @@
-package com.sleepeasysoftware.platetoccd;
+package com.sleepeasysoftware.platetoccd.parser;
 
 import au.com.bytecode.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;

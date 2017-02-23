@@ -1,4 +1,4 @@
-package com.sleepeasysoftware.platetoccd;
+package com.sleepeasysoftware.platetoccd.parser;
 
 import org.junit.Before;
 import org.junit.Test;
