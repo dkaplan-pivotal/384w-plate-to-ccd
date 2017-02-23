@@ -14,7 +14,7 @@ import java.io.File;
 public class ApplicationUsageTest {
 
     public static final String EXISTING_INPUT_FILE = "src/test/resources/happy_path_input.xlsx";
-    private static final String EXISTING_OUTPUT_FILE = "src/test/resources/happy_path_output.xlsx";
+    private static final String EXISTING_OUTPUT_FILE = "src/test/resources/happy_path_input.xlsx";
     public static final String DOES_NOT_EXIST_FILE = "src/test/resources/does_not_exist";
 
     private SpringApplicationBuilder subject;
@@ -31,7 +31,7 @@ public class ApplicationUsageTest {
     }
 
     @Test
-    public void requiresInputAndOutput() throws Exception {
+    public void requiresInput() throws Exception {
 
         thrown.expect(IllegalStateException.class);
         subject.run();
