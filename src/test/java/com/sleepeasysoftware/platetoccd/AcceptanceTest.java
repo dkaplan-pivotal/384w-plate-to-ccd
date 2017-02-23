@@ -14,7 +14,6 @@ import static com.sleepeasysoftware.platetoccd.ApplicationUsageTest.EXISTING_INP
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.fail;
 
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
@@ -50,6 +49,13 @@ public class AcceptanceTest {
         assertThat(header, hasSize(3));
     }
 
+    @Test
+    public void sheetIsCorrectSize() throws Exception {
+        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+
+        assertThat(sheet, hasSize(1153));
+    }
+
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void plateOutput() throws Exception {
@@ -67,28 +73,22 @@ public class AcceptanceTest {
         for (int row = 770; row < 1153; row++) {
             assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate3"));
         }
-
-        assertThat(sheet, hasSize(1153));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void wellOutput() throws Exception {
 
-        WellWriter wellWriter = new WellWriter();
-
         List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
 
-        for (int outputRow = 1; outputRow < 1153; outputRow++) {
-            char wellLetter = wellWriter.alphabeticRollover(outputRow - 1);
-            String wellNumber = wellWriter.wellNumber(outputRow - 1);
-
-            try {
-                assertThat("row=" + outputRow, sheet.get(outputRow).get(WELL_INDEX).get(), equalTo(wellLetter + wellNumber));
-            } catch (IndexOutOfBoundsException e) {
-                fail("Out of bounds on row " + outputRow);
-            }
-        }
+        assertThat(sheet.get(0).get(WELL_INDEX).get(), equalTo("Well"));
+        assertThat(sheet.get(1).get(WELL_INDEX).get(), equalTo("A01"));
+        assertThat(sheet.get(2).get(WELL_INDEX).get(), equalTo("B01"));
+        assertThat(sheet.get(17).get(WELL_INDEX).get(), equalTo("A02"));
+        assertThat(sheet.get(32).get(WELL_INDEX).get(), equalTo("P02"));
+        assertThat(sheet.get(384).get(WELL_INDEX).get(), equalTo("P24"));
+        assertThat(sheet.get(385).get(WELL_INDEX).get(), equalTo("A01"));
+        assertThat(sheet.get(1152).get(WELL_INDEX).get(), equalTo("P24"));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
