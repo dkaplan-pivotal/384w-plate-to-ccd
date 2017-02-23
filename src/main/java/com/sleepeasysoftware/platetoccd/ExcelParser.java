@@ -62,6 +62,8 @@ public class ExcelParser {
                         } else {
                             rowData.add(Optional.of(formatter.formatCellValue(cell)));
                         }
+                    } else {
+                        rowData.add(Optional.empty());
                     }
                 }
                 data.add(rowData);

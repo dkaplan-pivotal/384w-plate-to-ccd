@@ -3,6 +3,8 @@ package com.sleepeasysoftware.platetoccd;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.sleepeasysoftware.platetoccd.model.Plate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.Optional;
  */
 @Component
 public class DataToPlates {
+    private static final Logger log = LoggerFactory.getLogger(DataToPlates.class);
+
     private static final int PLATE_NAME_INDEX = 0;
     private static final int INPUT_ROWS_PER_PLATE = 18;
 
@@ -28,6 +32,7 @@ public class DataToPlates {
                 List<List<Optional<String>>> inputDataOfOnePlate = inputData.subList(inputRowIndex + 1, inputRowIndex + INPUT_ROWS_PER_PLATE - 1);
 
                 Table<String, String, Optional<String>> plateData = HashBasedTable.create();
+                String plateName = currentRow.get(0).orElse("(Plate Name Missing)");
                 for (int rowIndex = 0; rowIndex < inputDataOfOnePlate.size(); rowIndex++) {
                     List<Optional<String>> inputPlateRow = inputDataOfOnePlate.get(rowIndex);
 
@@ -35,10 +40,14 @@ public class DataToPlates {
                     for (int columnIndex = 1; columnIndex < 25; columnIndex++) {
                         String plateColumn = String.format("%02d", columnIndex);
 
-                        plateData.put(plateRow, plateColumn, inputPlateRow.get(columnIndex));
+                        try {
+                            plateData.put(plateRow, plateColumn, inputPlateRow.get(columnIndex));
+                        } catch (IndexOutOfBoundsException e) {
+                            log.error("Could not process plate named " + plateName);
+                            throw e;
+                        }
                     }
                 }
-                String plateName = currentRow.get(0).orElse("(Plate Name Missing)");
                 plates.add(new Plate(plateName, plateData));
             }
         }
