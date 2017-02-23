@@ -32,7 +32,7 @@ public class DataToPlates {
                     List<Optional<String>> inputPlateRow = inputDataOfOnePlate.get(rowIndex);
 
                     String plateRow = Character.toString(alphabeticRollover(rowIndex));
-                    for (int columnIndex = 1; columnIndex < inputPlateRow.size(); columnIndex++) {
+                    for (int columnIndex = 1; columnIndex < 25; columnIndex++) {
                         String plateColumn = String.format("%02d", columnIndex);
 
                         plateData.put(plateRow, plateColumn, inputPlateRow.get(columnIndex));

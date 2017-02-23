@@ -40,16 +40,21 @@ public class DataToPlatesTest {
         assertThat(plate1.getName(), equalTo("Plate1"));
         assertThat(plate1.getData().get("A", "01").get(), equalTo("4 2"));
         assertThat(plate1.getData().get("P", "24").get(), equalTo("19 25"));
-
+        assertThat(plate1.getData().columnKeySet().size(), equalTo(24));
+        assertThat(plate1.getData().rowKeySet().size(), equalTo(16));
 
         Plate plate2 = plates.get(1);
         assertThat(plate2.getName(), equalTo("Plate2"));
         assertThat(plate2.getData().get("A", "01").get(), equalTo("23 2"));
         assertThat(plate2.getData().get("P", "24").get(), equalTo("38 25"));
+        assertThat(plate2.getData().columnKeySet().size(), equalTo(24));
+        assertThat(plate2.getData().rowKeySet().size(), equalTo(16));
 
         Plate plate3 = plates.get(2);
         assertThat(plate3.getName(), equalTo("Plate3"));
         assertThat(plate3.getData().get("A", "01").get(), equalTo("42 2"));
         assertThat(plate3.getData().get("P", "24").get(), equalTo("57 25"));
+        assertThat(plate3.getData().columnKeySet().size(), equalTo(24));
+        assertThat(plate3.getData().rowKeySet().size(), equalTo(16));
     }
 }

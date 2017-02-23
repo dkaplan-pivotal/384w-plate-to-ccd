@@ -1,6 +1,8 @@
 package com.sleepeasysoftware.platetoccd;
 
+import com.sleepeasysoftware.platetoccd.model.OutputDataRow;
 import com.sleepeasysoftware.platetoccd.model.Plate;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -26,15 +28,17 @@ public class ApplicationUsage implements ApplicationRunner {
     private final WellWriter wellWriter;
     private final DataWriter dataWriter;
     private final DataToPlates dataToPlates;
+    private final PlatesToOutputData platesToOutputData;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter, DataWriter dataWriter, DataToPlates dataToPlates) {
+    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter, DataWriter dataWriter, DataToPlates dataToPlates, PlatesToOutputData platesToOutputData) {
         this.headerWriter = headerWriter;
         this.plateWriter = plateWriter;
         this.excelParser = excelParser;
         this.wellWriter = wellWriter;
         this.dataWriter = dataWriter;
         this.dataToPlates = dataToPlates;
+        this.platesToOutputData = platesToOutputData;
     }
 
     @Override
@@ -66,9 +70,20 @@ public class ApplicationUsage implements ApplicationRunner {
 
         List<Plate> plates = dataToPlates.execute(inputData);
 
-        plateWriter.execute(inputData, sheet);
-        wellWriter.execute(inputData, sheet);
-        dataWriter.execute(inputData, sheet);
+        List<OutputDataRow> outputData = platesToOutputData.execute(plates);
+
+        for (int i = 0; i < outputData.size(); i++) {
+            OutputDataRow outputRow = outputData.get(i);
+
+            Row row = sheet.createRow(i + 1);
+            row.createCell(0).setCellValue(outputRow.getPlateName());
+            row.createCell(1).setCellValue(outputRow.getWell());
+            row.createCell(2).setCellValue(outputRow.getData().orElse(""));
+        }
+
+//        plateWriter.execute(inputData, sheet);
+//        wellWriter.execute(inputData, sheet);
+//        dataWriter.execute(inputData, sheet);
 
         try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
             wb.write(fileOut);
