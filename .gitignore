@@ -24,4 +24,5 @@ nbdist/
 .nb-gradle/
 
 test_output.xlsx
+test_output.csv
 does_not_exist
