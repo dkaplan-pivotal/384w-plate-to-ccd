@@ -1,5 +1,6 @@
 package com.sleepeasysoftware.platetoccd;
 
+import com.sleepeasysoftware.platetoccd.model.Plate;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,14 +25,16 @@ public class ApplicationUsage implements ApplicationRunner {
     private final ExcelParser excelParser;
     private final WellWriter wellWriter;
     private final DataWriter dataWriter;
+    private final DataToPlates dataToPlates;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter, DataWriter dataWriter) {
+    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter, DataWriter dataWriter, DataToPlates dataToPlates) {
         this.headerWriter = headerWriter;
         this.plateWriter = plateWriter;
         this.excelParser = excelParser;
         this.wellWriter = wellWriter;
         this.dataWriter = dataWriter;
+        this.dataToPlates = dataToPlates;
     }
 
     @Override
@@ -60,6 +63,8 @@ public class ApplicationUsage implements ApplicationRunner {
         headerWriter.execute(sheet);
 
         List<List<Optional<String>>> inputData = excelParser.parseFirstSheet(inputPath);
+
+        List<Plate> plates = dataToPlates.execute(inputData);
 
         plateWriter.execute(inputData, sheet);
         wellWriter.execute(inputData, sheet);
