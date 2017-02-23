@@ -20,7 +20,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  */
 public class AcceptanceTest {
 
-    private static final String OUTPUT_FILE = "src/test/resources/test_output.xlsx";
+    private static final String OUTPUT_FILE = "src/test/resources/test_output.csv";
     private static final int PLATE_COLUMN = 0;
     private static final int WELL_INDEX = 1;
     private static final int DATA_INDEX = 2;
@@ -40,7 +40,7 @@ public class AcceptanceTest {
     @Test
     public void headerOutput() throws Exception {
 
-        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+        List<List<Optional<String>>> sheet = new CsvParser().parse(OUTPUT_FILE);
 
         List<Optional<String>> header = sheet.get(0);
         assertThat(header.get(0).get(), equalTo("Plate"));
@@ -51,7 +51,7 @@ public class AcceptanceTest {
 
     @Test
     public void sheetIsCorrectSize() throws Exception {
-        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+        List<List<Optional<String>>> sheet = new CsvParser().parse(OUTPUT_FILE);
 
         assertThat(sheet, hasSize(1153));
     }
@@ -60,7 +60,7 @@ public class AcceptanceTest {
     @Test
     public void plateOutput() throws Exception {
 
-        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+        List<List<Optional<String>>> sheet = new CsvParser().parse(OUTPUT_FILE);
 
         for (int row = 1; row < 385; row++) {
             assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate1"));
@@ -79,7 +79,7 @@ public class AcceptanceTest {
     @Test
     public void wellOutput() throws Exception {
 
-        List<List<Optional<String>>> sheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+        List<List<Optional<String>>> sheet = new CsvParser().parse(OUTPUT_FILE);
 
         assertThat(sheet.get(0).get(WELL_INDEX).get(), equalTo("Well"));
         assertThat(sheet.get(1).get(WELL_INDEX).get(), equalTo("A01"));
@@ -94,7 +94,7 @@ public class AcceptanceTest {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void dataOutput() throws Exception {
-        List<List<Optional<String>>> outputSheet = new ExcelParser().parseFirstSheet(OUTPUT_FILE);
+        List<List<Optional<String>>> outputSheet = new CsvParser().parse(OUTPUT_FILE);
 
         assertThat(outputSheet.get(1).get(DATA_INDEX).get(), equalTo("4 2"));
         assertThat(outputSheet.get(2).get(DATA_INDEX).get(), equalTo("5 2"));

@@ -1,18 +1,15 @@
 package com.sleepeasysoftware.platetoccd;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.sleepeasysoftware.platetoccd.model.OutputDataRow;
 import com.sleepeasysoftware.platetoccd.model.Plate;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +19,13 @@ import java.util.Optional;
 @Component
 public class ApplicationUsage implements ApplicationRunner {
 
-    private final HeaderWriter headerWriter;
+
     private final ExcelParser excelParser;
     private final DataToPlates dataToPlates;
     private final PlatesToOutputData platesToOutputData;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter, ExcelParser excelParser, DataToPlates dataToPlates, PlatesToOutputData platesToOutputData) {
-        this.headerWriter = headerWriter;
+    public ApplicationUsage(ExcelParser excelParser, DataToPlates dataToPlates, PlatesToOutputData platesToOutputData) {
         this.excelParser = excelParser;
         this.dataToPlates = dataToPlates;
         this.platesToOutputData = platesToOutputData;
@@ -55,28 +51,19 @@ public class ApplicationUsage implements ApplicationRunner {
             throw new IllegalArgumentException("Output file already exists.  The output file must not already exist.  Found " + outputPath);
         }
 
-        Workbook wb = new XSSFWorkbook();
-        Sheet sheet = wb.createSheet("new sheet");
-
-        headerWriter.execute(sheet);
-
         List<List<Optional<String>>> inputData = excelParser.parseFirstSheet(inputPath);
 
         List<Plate> plates = dataToPlates.execute(inputData);
 
         List<OutputDataRow> outputData = platesToOutputData.execute(plates);
 
-        for (int i = 0; i < outputData.size(); i++) {
-            OutputDataRow outputRow = outputData.get(i);
+        try (CSVWriter writer = new CSVWriter(new FileWriter(outputPath))) {
+            writer.writeNext(new String[]{"Plate", "Well", "Data"});
 
-            Row row = sheet.createRow(i + 1);
-            row.createCell(0).setCellValue(outputRow.getPlateName());
-            row.createCell(1).setCellValue(outputRow.getWell());
-            row.createCell(2).setCellValue(outputRow.getData().orElse(""));
-        }
-
-        try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
-            wb.write(fileOut);
+            for (OutputDataRow outputRow : outputData) {
+                String[] rawRow = {outputRow.getPlateName(), outputRow.getWell(), outputRow.getData().orElse("")};
+                writer.writeNext(rawRow);
+            }
         }
     }
 }
