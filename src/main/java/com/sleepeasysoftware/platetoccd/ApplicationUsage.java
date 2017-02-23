@@ -23,20 +23,14 @@ import java.util.Optional;
 public class ApplicationUsage implements ApplicationRunner {
 
     private final HeaderWriter headerWriter;
-    private final PlateWriter plateWriter;
     private final ExcelParser excelParser;
-    private final WellWriter wellWriter;
-    private final DataWriter dataWriter;
     private final DataToPlates dataToPlates;
     private final PlatesToOutputData platesToOutputData;
 
     @Autowired
-    public ApplicationUsage(HeaderWriter headerWriter, PlateWriter plateWriter, ExcelParser excelParser, WellWriter wellWriter, DataWriter dataWriter, DataToPlates dataToPlates, PlatesToOutputData platesToOutputData) {
+    public ApplicationUsage(HeaderWriter headerWriter, ExcelParser excelParser, DataToPlates dataToPlates, PlatesToOutputData platesToOutputData) {
         this.headerWriter = headerWriter;
-        this.plateWriter = plateWriter;
         this.excelParser = excelParser;
-        this.wellWriter = wellWriter;
-        this.dataWriter = dataWriter;
         this.dataToPlates = dataToPlates;
         this.platesToOutputData = platesToOutputData;
     }
@@ -80,10 +74,6 @@ public class ApplicationUsage implements ApplicationRunner {
             row.createCell(1).setCellValue(outputRow.getWell());
             row.createCell(2).setCellValue(outputRow.getData().orElse(""));
         }
-
-//        plateWriter.execute(inputData, sheet);
-//        wellWriter.execute(inputData, sheet);
-//        dataWriter.execute(inputData, sheet);
 
         try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
             wb.write(fileOut);
