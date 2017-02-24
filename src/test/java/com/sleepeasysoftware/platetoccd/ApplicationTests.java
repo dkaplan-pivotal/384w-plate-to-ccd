@@ -10,6 +10,7 @@ import java.io.File;
 
 import static com.sleepeasysoftware.platetoccd.ApplicationUsageTest.DOES_NOT_EXIST_FILE;
 import static com.sleepeasysoftware.platetoccd.ApplicationUsageTest.EXISTING_INPUT_FILE;
+import static com.sleepeasysoftware.platetoccd.FileDelete.deleteAndFlushFs;
 
 public class ApplicationTests {
 
@@ -20,8 +21,7 @@ public class ApplicationTests {
 
 	@Before
 	public void setUp() throws Exception {
-		//noinspection ResultOfMethodCallIgnored
-		new File(DOES_NOT_EXIST_FILE).delete();
+		deleteAndFlushFs(DOES_NOT_EXIST_FILE);
 
 		subject = new SpringApplicationBuilder(Application.class);
 	}

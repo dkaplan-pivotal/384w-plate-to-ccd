@@ -7,11 +7,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
 import static com.sleepeasysoftware.platetoccd.ApplicationUsageTest.EXISTING_INPUT_FILE;
+import static com.sleepeasysoftware.platetoccd.FileDelete.deleteAndFlushFs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -31,8 +31,8 @@ public class AcceptanceTest {
 
     @Before
     public void setUp() throws Exception {
-        //noinspection ResultOfMethodCallIgnored
-        new File(OUTPUT_FILE).delete();
+        deleteAndFlushFs(OUTPUT_FILE);
+
         new SpringApplicationBuilder(Application.class).
                 run(EXISTING_INPUT_FILE, OUTPUT_FILE);
     }

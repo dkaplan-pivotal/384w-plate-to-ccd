@@ -8,6 +8,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.io.File;
 
+import static com.sleepeasysoftware.platetoccd.FileDelete.deleteAndFlushFs;
+
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
  */
@@ -24,8 +26,7 @@ public class ApplicationUsageTest {
 
     @Before
     public void setUp() throws Exception {
-        //noinspection ResultOfMethodCallIgnored
-        new File(DOES_NOT_EXIST_FILE).delete();
+        deleteAndFlushFs(DOES_NOT_EXIST_FILE);
 
         subject = new SpringApplicationBuilder(Application.class);
     }
