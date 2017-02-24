@@ -1,5 +1,6 @@
 package com.sleepeasysoftware.platetoccd.parser;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Daniel Kaplan on behalf of Sleep Easy Software.
@@ -72,6 +74,22 @@ public class ExcelParserTest {
         assertThat(data.toString(), countNulls, greaterThan(0));
         assertThat(data.toString(), count24, equalTo(3));
         assertThat(data.toString(), countP, equalTo(3));
+    }
+
+    @Test
+    public void blankDataIsNotCollapsed() throws Exception {
+        List<List<Optional<String>>> data = subject.parseFirstSheet("src/test/resources/input_with_blanks.xlsx");
+
+        for (int i = 0; i < data.size(); i++) {
+            List<Optional<String>> row = data.get(i);
+
+            if (row.get(0).isPresent()) {
+                String firstCell = row.get(0).get();
+                if (firstCell.length() == 1 && StringUtils.isAlpha(firstCell)) {
+                    assertTrue("wrong number of columns for row " + i + "\n" + row, row.get(24).isPresent());
+                }
+            }
+        }
     }
 
 }
