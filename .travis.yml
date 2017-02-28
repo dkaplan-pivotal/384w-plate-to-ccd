@@ -6,6 +6,6 @@ deploy:
   provider: releases
   api_key:
     secure: HxK4208Z9mQE28C/OCarAWSVHT/T/jo2NF4ErGVzACZrPF9I5nwDiFVwdrhGVorMWj9SirTl6uBsTaXnZNXXG+OK0648CoZMDbzx4oACLqqCQpR4dZCf+U0tKEQ/2Ajt0mwMccemnrpO1mg1CDVaySz3GAKKliK/mgmxjysp1GQ7yGalkuH/e3/puZEi8/i/KjVQEqHKiYoRduRLEa0SPHzf3Yw6L5bXp/k4jpdC1uiII4BeF/B2LSJkSi3874E02s/8Y4PpVhS/SdlaxwNH6qIz/yMXHDhj+Pmdrr+S78tN58Ah2i1I+wykN5BPxz9bocBTzFz75PuYpJWCLfPNRLH5HqQ7Bax0atXsVgs4yvh+CTMfPNFqEU1l/ezdW/EmgUR08TCCYxqnyLN7HChrtSOA6MbxI+dbeObAQ5O+PQWClkuPJ6SbO6U46nc082FkreCsy8PqqLFeBxo8UTWR3zG7uLV1tS097UvSZIAuytB2/1sDy091T7MDEzbyMfVnIv58D44+jwvPpz+QWAM6PxUMEknB5YKLhGcR0RZHheOrYstorcJgW8GGDk/pggSJvuQZ/dHcsjpmcAMAPbvzCKby2Be/3WWNHCoZtMh23N17iiJiK5r+mvEIu5kPMtxepJ2kx6h5il/09JKt/Sz2/c7RsnYdcEqD7mGkmm2mRfA=
-  file: target/384w-plate-to-ccd.jar
+  file: /home/travis/build/tieTYT/384w-plate-to-ccd/target/384w-plate-to-ccd.jar
   on:
     repo: tieTYT/384w-plate-to-ccd
