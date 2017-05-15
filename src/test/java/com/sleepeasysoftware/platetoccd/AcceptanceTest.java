@@ -22,6 +22,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class AcceptanceTest {
 
     private static final String OUTPUT_FILE = "src/test/resources/test_output.csv";
+    private static final String OUTPUT_FILE_WITH_COUNT_COLUMN = "src/test/resources/test_output.csv";
     private static final int PLATE_COLUMN = 0;
     private static final int WELL_INDEX = 1;
     private static final int DATA_INDEX = 2;
@@ -35,9 +36,12 @@ public class AcceptanceTest {
 
         new SpringApplicationBuilder(Application.class).
                 run(EXISTING_INPUT_FILE, OUTPUT_FILE);
+
+        new SpringApplicationBuilder(Application.class).
+                run("--include-count-column", EXISTING_INPUT_FILE, OUTPUT_FILE_WITH_COUNT_COLUMN);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "ConstantConditions"})
     @Test
     public void headerOutput() throws Exception {
 
@@ -57,7 +61,7 @@ public class AcceptanceTest {
         assertThat(sheet, hasSize(1153));
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "ConstantConditions"})
     @Test
     public void plateOutput() throws Exception {
 
@@ -76,7 +80,28 @@ public class AcceptanceTest {
         }
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "ConstantConditions"})
+    @Test
+    public void plateOutputWithCountColumn() throws Exception {
+
+        List<List<Optional<String>>> sheet = new CsvParser().parse(OUTPUT_FILE);
+
+        for (int row = 1; row < 385; row++) {
+            assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate1"));
+        }
+
+        assertThat(sheet.get(1).get(0).get(), );
+
+        for (int row = 386; row < 769; row++) {
+            assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate2"));
+        }
+
+        for (int row = 770; row < 1153; row++) {
+            assertThat("row=" + row, sheet.get(row).get(PLATE_COLUMN).get(), equalTo("Plate3"));
+        }
+    }
+
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "ConstantConditions"})
     @Test
     public void wellOutput() throws Exception {
 
@@ -92,7 +117,7 @@ public class AcceptanceTest {
         assertThat(sheet.get(1152).get(WELL_INDEX).get(), equalTo("P24"));
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "ConstantConditions"})
     @Test
     public void dataOutput() throws Exception {
         List<List<Optional<String>>> outputSheet = new CsvParser().parse(OUTPUT_FILE);

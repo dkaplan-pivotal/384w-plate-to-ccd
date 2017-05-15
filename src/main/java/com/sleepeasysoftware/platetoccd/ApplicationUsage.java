@@ -34,20 +34,20 @@ public class ApplicationUsage implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        List<String> arguments = args.getNonOptionArgs();
-        if (arguments.size() != 2) {
+        List<String> files = args.getNonOptionArgs();
+        if (files.size() != 2) {
             throw new IllegalArgumentException("Incorrect usage:\n" +
                     "You need to pass in two arguments.  The first one is the\n" +
                     "path to the input file.  The second one is the path to the output file.  e.g.,\n" +
                     "java -jar 384w-plate-to-ccd.jar '/Users/pivotal/workspace/384w-plate-to-ccd/src/test/resources/happy_path_input.xlsx' '/Users/pivotal/workspace/384w-plate-to-ccd/src/test/resources/happy_path_output.xlsx'");
         }
 
-        String inputPath = arguments.get(0);
+        String inputPath = files.get(0);
         if (!new File(inputPath).exists()) {
             throw new IllegalArgumentException("Could not find the input file.  Looked for " + inputPath);
         }
 
-        String outputPath = arguments.get(1);
+        String outputPath = files.get(1);
         if (new File(outputPath).exists()) {
             throw new IllegalArgumentException("Output file already exists.  The output file must not already exist.  Found " + outputPath);
         }
